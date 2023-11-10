@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        .container {
+            display: flex;
+            gap: 32px;
+        }
+
+        .board {
+            background-color: #f0f0f0;
+            height: 200px;
+            width: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 2px dashed #999;
+        }
+
+        .card {
+            padding: 8px;
+            background-color: #fff;
+            cursor: move;
+            margin: 4px 0;
+        }
+    </style>
+    <title>Drag and Drop</title>
+</head>
+<body>
+    <div class="container">
+        <div class="board" id="board1">
+            <div class="card" draggable="true" id="test" data-id="test">
+                <p>test</p>
+            </div>
+            <div class="card" draggable="true" id="test" data-id="test-2">
+                <p>test-2</p>
+            </div>
+            <div class="card" draggable="true" id="test" data-id="test-2">
+                <p>test-3</p>
+            </div>
+        </div>
+        <div class="board" id=" board2">
+            <div class="card" draggable="true" id="test-1" data-id="test-1">
+                <p>test-1</p>
+            </div>
+        </div>
+    </div>
+    <script>
+        const card = document.querySelectorAll('.card');
+        const boards = document.querySelectorAll('.board');
+        let draggedItem = null;
+        card.forEach((card) => {
+            card.addEventListener('dragstart', (event) => {
+                event.target.value
+                draggedItem = event.target;
+                event.dataTransfer.setData('text', event.target.getAttribute('data-id'));
+            });
+            card.addEventListener('dragend', () => {
+                draggedItem = null;
+            });
+        });
+        boards.forEach((board) => {
+            board.addEventListener('dragover', (event) => {
+                event.preventDefault();
+            });
+            board.addEventListener('dragenter', (event) => {
+                event.preventDefault();
+                if (draggedItem) {
+                    const draggingBoard = draggedItem.parentNode;
+                    if (draggingBoard !== event.currentTarget) {
+                        event.currentTarget.appendChild(draggedItem);
+                    }
+                }
+            });
+            board.addEventListener('dragleave', () => { });
+            board.addEventListener('drop', (event) => {
+                event.preventDefault();
+            });
+        });
+    </script>
+</body>
+
+</html>

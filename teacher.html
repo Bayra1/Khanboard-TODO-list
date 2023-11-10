@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        body {
+            display: flex;
+            gap: 32px;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .todos {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .todo {
+            border: 2px solid black;
+            padding: 8px;
+            border-radius: 8px;
+            display: flex;
+            gap: 16px;
+        }
+    </style>
+    <title>todo</title>
+</head>
+
+<body>
+    <div>
+        <input type="text" />
+        <button onclick="addTitle()">add</button>
+    </div>
+    <div class="todos">
+    </div>
+    <script>
+        let data = [];
+        function addTitle() {
+            let input = document.querySelector('input');
+            let todos = document.querySelector('.todos');
+            todos.innerHTML = "";
+            data.push(input.value);
+            for (let i = 0; i < data.length; i++) {
+                render(data[i]);
+            }
+        }
+        function render(parameter) {
+            let todos = document.querySelector('.todos');
+            let todo = document.createElement('div');
+            let title = document.createElement('p');
+            let remove = document.createElement('button');
+            let edit = document.createElement('button');
+            title.innerText = parameter
+            remove.innerText = "remove";
+
+            remove.addEventListener("click", function removeElement() {
+                todo.remove();
+                data = data.filter(function (i) {
+                    return i !== parameter
+                })
+            })
+
+            edit.innerText = "edit"
+            edit.addEventListener("click", function editElement() {
+                let input = document.querySelector('input');
+                input.focus();
+                title.innerText = input.value
+                input.value = ""
+                console.log(input.value);
+            })
+
+            todo.classList.add('todo');
+            todo.appendChild(title);
+            todo.appendChild(edit);
+            todo.appendChild(remove);
+            todos.appendChild(todo);
+
+        }
+    </script>
+</body>
+
+</html>
