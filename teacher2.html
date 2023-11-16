@@ -6,196 +6,135 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
-        * {
-            margin: 0;
-            border: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            width: 100%;
-        }
-
-        button {
-            border: none;
-            background: transparent;
-        }
-
-        p {
-            font-weight: bold;
-        }
-
-        .addBtn {
-            width: 100%;
-            text-align: start;
-        }
-
-        .addBtn:hover {
-            background-color: #ccc;
-        }
-
         .container {
-            background-color: aquamarine;
-            width: 1200px;
-            height: 100%;
-        }
-
-        .boards {
-            margin: 50px;
             display: flex;
-            gap: 16px;
+            gap: 32px;
         }
 
         .board {
-            background: #ccc;
-            height: fit-content;
-            flex: 1;
-            border-radius: 4px;
-            padding: 12px;
+            background-color: #f0f0f0;
+            height: 200px;
+            width: 200px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
-        }
-
-        .header {
-            display: flex;
+            justify-content: center;
             align-items: center;
-            gap: 16px;
-        }
-
-        .cards {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
+            border: 2px dashed #999;
         }
 
         .card {
-            display: flex;
-            gap: 8px;
-            background-color: #fff;
-            border-radius: 8px;
             padding: 8px;
-        }
-
-        .info {
-            flex: 1;
-        }
-
-        .done,
-        .close {
-            display: flex;
-            border-radius: 50%;
-            border: 1px solid black;
-            height: 19.9px;
-        }
-
-        .info {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .priority {
-            border: 1px solid black;
-            border-radius: 4px;
-            width: fit-content;
-            padding: 2px 8px;
+            background-color: #fff;
+            cursor: move;
+            margin: 4px 0;
         }
     </style>
-    <title>Document</title>
+    <title>Drag and Drop</title>
 </head>
 
 <body>
     <div class="container">
-        <div class="boards">
-            <div class="board">
-                <div class="header">
-                    <h3>Todo</h3>
-                    <p>0</p>
-                </div>
-                <div class="cards"></div>
-                <div>
-                    <button class="addBtn" onclick="addCard()">+ add card</button>
-                </div>
+        <div class="board" id="board1">
+            <div class="card" draggable="true" id="test" data-id="test">
+                <p>test</p>
+            </div>
+        </div>
+        <div class="board" id=" board2">
+            <div class="card" draggable="true" id="test-1" data-id="test-1">
+                <p>test-1</p>
             </div>
         </div>
     </div>
-    <div id="within-card">
-        <div class="style-within-card">
-            <div style="display: flex; gap: 15px;">
-                <button class="done-button"><i class="fa fa-check"></i></button>
-                <div id="information">
-                    <h4>${taskTitle}</h4>
-                    <p>${taskDescription}</p>
-                    <div id="card-priority">${taskPriority}</div>
-                </div>
-            </div>
-            <div id="actions">
-                <div>
-                    <button class="remove-edit" id="delete-Btn"><i class="fa fa-trash"></i></button>
-                </div>
-                <div>
-                    <button class="remove-edit"><i class="fa fa-edit"></i></button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
-
-
-
-
-
     <script>
-        const data = [
-            {
-                title: 'todo',
-                desc: 'this is a todo card',
-                status: 'done',
-                priority: 'High',
-            },
+        const card = document.querySelectorAll('.card');
+        const boards = document.querySelectorAll('.board');
+        let draggedItem = null;
+        card.forEach((card) => {
+            card.addEventListener('dragstart', (event) => {
+                event.target.value
+                draggedItem = event.target;
+                event.dataTransfer.setData('text', event.target.getAttribute('data-id'));
+            });
+            card.addEventListener('dragend', () => {
+                draggedItem = null;
+            });
+        });
+        boards.forEach((board) => {
+            board.addEventListener('dragover', (event) => {
+                event.preventDefault();
+            });
+            board.addEventListener('dragenter', (event) => {
+                event.preventDefault();
+                if (draggedItem) {
+                    const draggingBoard = draggedItem.parentNode;
+                    if (draggingBoard !== event.currentTarget) {
+                        event.currentTarget.appendChild(draggedItem);
+                    }
+                }
+            });
+            board.addEventListener('dragleave', () => { });
+            board.addEventListener('drop', (event) => {
+                event.preventDefault();
+            });
+        });
+
+
+
+
+
+
+
+        let cardWrappers = [
+            document.querySelector("#cardWrapper-todo"),
+            document.querySelector("#cardWrapper-inProgress"),
+            document.querySelector("#cardWrapper-stuck"),
+            document.querySelector("#cardWrapper-done")
         ];
-        function render(data) {
-            const cards = document.getElementsByClassName("cards")[0];
-            const done = []
-            cards.innerHTML = ""
-            for (let i = 0; i < data.length; i++) {
-                cards.innerHTML += createCard(data[i]);
-            }
-        }
-        function addCard() {
-            const mockData = {
-                title: '',
-                desc: '',
-                status: '',
-                priority: '',
-            }
-            mockData.title = "hi untaach";
-            mockData.desc = "gasdgaga";
-            mockData.status = "done";
-            mockData.priority = "low";
-            data.push(mockData);
-            render(data)
-        }
-        function createCard(card) {
-            const { title, desc, priority } = card;
-            return ` <div class="card">
- <button class="done">v</button>
- <div class="info">
- <p>${title}</p>
- <span>${desc}</span>
- <div class="priority">${priority}</div>
- </div>
- <button class="close">x</button>
- </div>`;
-        }
-        render(data)
+
+        let allBoards = document.querySelectorAll(".box-board");
+        let draggedItem = null;
+
+        cardWrappers.forEach(cardWrapper => {
+            cardWrapper.addEventListener('dragstart', (event) => {
+                console.log(event);
+                draggedItem = event.target;
+                event.dataTransfer.setData('text', event.target.getAttribute('data-id'));
+            });
+            cardWrapper.addEventListener('dragend', () => {
+                draggedItem = null;
+            });
+        });
+
+        allBoards.forEach(board => {
+            board.addEventListener('dragover', (event) => {
+                event.preventDefault();
+            });
+            board.addEventListener('dragenter', (event) => {
+                event.preventDefault();
+                if (draggedItem) {
+                    if (draggedItem !== event.currentTarget) {
+                        event.currentTarget.appendChild(draggedItem);
+                    }
+                }
+            });
+            board.addEventListener('dragleave', () => { });
+            board.addEventListener('drop', (event) => {
+                event.preventDefault();
+            });
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
     </script>
 </body>
 

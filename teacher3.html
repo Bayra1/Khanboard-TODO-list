@@ -31,6 +31,7 @@
     </style>
     <title>Drag and Drop</title>
 </head>
+
 <body>
     <div class="container">
         <div class="board" id="board1">
@@ -82,7 +83,57 @@
                 event.preventDefault();
             });
         });
+
+
+
+/// separation
+
+        allboards.forEach((board) => {
+    board.addEventListener('dragover', (event) => {
+        event.preventDefault();
+    });
+
+    board.addEventListener('dragenter', (event) => {
+        event.preventDefault();
+        if (draggedItem) {
+            if (draggedItem !== event.currentTarget) {
+                let id = draggedItem.getAttribute('data-id'); // Consider using this 'id' variable
+                console.log(id); // Log the 'id' variable
+                event.currentTarget.querySelector('.all-cards').appendChild(draggedItem);
+
+                // Update the conditions based on your logic
+                if (status === 'To Do') {
+                    todoCard.querySelector('.all-cards').appendChild(draggedItem);
+                } else if (status === 'In Progress') {
+                    progressCard.querySelector('.all-cards').appendChild(draggedItem);
+                } else if (status === 'Stuck') {
+                    stuckCard.querySelector('.all-cards').appendChild(draggedItem);
+                } else if (status === 'Done') {
+                    doneCard.querySelector('.all-cards').appendChild(draggedItem);
+                }
+            }
+        }
+        counter(); // Consider moving this outside the if statement if it should always be called
+    });
+
+    board.addEventListener('dragleave', () => {
+        // Implement logic if needed
+    });
+
+    board.addEventListener('drop', (event) => {
+        event.preventDefault();
+        // Implement logic to handle the drop event
+    });
+
+    // Ensure Updatecounter is defined and used appropriately
+    Updatecounter();
+});
+
     </script>
+</body>
+
+</html>
+</script>
 </body>
 
 </html>

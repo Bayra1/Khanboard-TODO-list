@@ -279,103 +279,45 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            let data = []; // Start with an empty array or preload with tasks
+        allboards.forEach(board => {
+    board.addEventListener('dragover', (event) => {
+        event.preventDefault();
+    });
 
-            function createCard(task) {
-                const cardElement = document.createElement('div');
-                cardElement.classList.add('style-within-card');
-                cardElement.innerHTML = `
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <button class="done-button"><i class="fa fa-check"></i></button>
-                <div class="information">
-                    <h4>${task.title}</h4>
-                    <p>${task.desc}</p>
-                    <div class="card-priority">${task.priority}</div>
-                </div>
-                <div class="actions">
-                    <button class="remove-edit"><i class="fa fa-trash"></i></button>
-                    <button class="remove-edit"><i class="fa fa-edit"></i></button>
-                </div>
-            </div>
-        `;
-                return cardElement;
+    board.addEventListener('dragenter', (event) => {
+        event.preventDefault();
+        if (draggedItem) {
+            if (draggedItem !== event.currentTarget) {
+                let id = draggedItem.getAttribute('data-id');
+                let status = event.currentTarget.getAttribute('data-status');
+
+                // Compare the status and update accordingly
+                if (status === 'todo') {
+                    todoCard.querySelector('.all-cards').appendChild(draggedItem);
+                } else if (status === 'inProgress') {
+                    progressCard.querySelector('.all-cards').appendChild(draggedItem);
+                } else if (status === 'stuck') {
+                    stuckCard.querySelector('.all-cards').appendChild(draggedItem);
+                } else if (status === 'done') {
+                    doneCard.querySelector('.all-cards').appendChild(draggedItem);
+                }
+
+                // Call the counter function here
+                counter();
             }
+        }
+        // You might want to call Updatecounter() here if needed.
+    });
 
-            function render(task) {
-                let cardWrapper;
-                switch (task.status) {
-                    case 'To do':
-                        cardWrapper = document.querySelector("#cardWrapper-todo");
-                        break;
-                    case 'In Progress':
-                        cardWrapper = document.querySelector("#cardWrapper-inProgress");
-                        break;
-                    case 'Stuck':
-                        cardWrapper = document.querySelector("#cardWrapper-stuck");
-                        break;
-                    case 'Done':
-                        cardWrapper = document.querySelector("#cardWrapper-done");
-                        break;
-                }
-                if (cardWrapper) {
-                    const card = createCard(task);
-                    cardWrapper.appendChild(card);
-                    updateCounters();
-                }
-            }
+    board.addEventListener('dragleave', () => {
+        // Handle dragleave if needed
+    });
 
-            function updateCounters() {
-                document.querySelector("#todo-counter").textContent = document.querySelectorAll("#cardWrapper-todo .style-within-card").length;
-                document.querySelector("#inProgress-counter").textContent = document.querySelectorAll("#cardWrapper-inProgress .style-within-card").length;
-                document.querySelector("#stuck-counter").textContent = document.querySelectorAll("#cardWrapper-stuck .style-within-card").length;
-                document.querySelector("#done-counter").textContent = document.querySelectorAll("#cardWrapper-done .style-within-card").length;
-            }
-
-            document.querySelectorAll('.add-card').forEach(function (button) {
-                button.addEventListener('click', function () {
-                    document.getElementById("modal").style.display = "block";
-                });
-            });
-
-            document.getElementById('add-task').addEventListener('click', function () {
-                const taskTitle = document.querySelector("#task-title").value.trim();
-                const taskDescription = document.querySelector("#task-description").value.trim();
-                const taskStatus = document.querySelector("#task-status").value;
-                const taskPriority = document.querySelector("#task-priority").value;
-
-                if (taskTitle === "" || taskDescription === "") {
-                    // Show warning texts if necessary or alert
-                    alert('Please fill out the title and description.');
-                    return;
-                }
-
-                const newTask = {
-                    title: taskTitle,
-                    desc: taskDescription,
-                    status: taskStatus,
-                    priority: taskPriority
-                };
-
-                data.push(newTask);
-                render(newTask);
-
-                document.getElementById("modal").style.display = "none";
-            });
-
-            document.getElementById('boards').addEventListener('click', function (event) {
-                if (event.target.classList.contains('fa-trash')) {
-                    const card = event.target.closest('.style-within-card');
-                    const index = Array.from(card.parentNode.children).indexOf(card);
-                    data.splice(index, 1);
-                    card.remove();
-                    updateCounters();
-                }
-            });
-
-            // Optionally, render any pre-existing tasks
-            data.forEach(render);
-        });
+    board.addEventListener('drop', (event) => {
+        event.preventDefault();
+        // Handle drop if needed
+    });
+});
 
     </script>
 </body>
