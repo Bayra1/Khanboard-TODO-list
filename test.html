@@ -1,325 +1,326 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Task Management Board</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
     <style>
-        * {
-            margin: 0px;
-            box-sizing: border-box;
+      * {
+        margin: 0px;
+        box-sizing: border-box;
+      }
 
-        }
+      body {
+        background-image: url("https://c1.wallpaperflare.com/path/565/385/156/sunset-brook-green-meadow-june-df867360f0bed19da26bbb3838498c8f.jpg");
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+      }
 
-        body {
-            background-image: url("https://c1.wallpaperflare.com/path/565/385/156/sunset-brook-green-meadow-june-df867360f0bed19da26bbb3838498c8f.jpg");
-            background-repeat: no-repeat;
-            background-size: 100% 100%;
-        }
+      input {
+        width: 380px;
+        padding: 8px;
+        border-radius: 4px;
+        border: 1px solid rgba(0, 0, 0, 0.3);
+      }
 
-        input {
-            width: 380px;
-            padding: 8px;
-            border-radius: 4px;
-            border: 1px solid rgba(0, 0, 0, 0.3);
-        }
+      textarea {
+        width: 380px;
+        padding: 8px;
+        border-radius: 4px;
+        border: 1px solid rgba(0, 0, 0, 0.3);
+        height: 100px;
+        resize: none;
+      }
 
-        textarea {
-            width: 380px;
-            padding: 8px;
-            border-radius: 4px;
-            border: 1px solid rgba(0, 0, 0, 0.3);
-            height: 100px;
-            resize: none;
-        }
+      select {
+        width: 100%;
+        padding: 8px;
+        border-radius: 4px;
+        border: 1px solid rgba(0, 0, 0, 0.3);
+      }
 
-        select {
-            width: 100%;
-            padding: 8px;
-            border-radius: 4px;
-            border: 1px solid rgba(0, 0, 0, 0.3);
-        }
+      .box-board {
+        height: fit-content;
+        background-color: #ebecf0;
+        border-radius: 8px;
+        padding: 8px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
 
-        .box-board {
-            height: fit-content;
-            background-color: #ebecf0;
-            border-radius: 8px;
-            padding: 8px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
+      .warning-text {
+        color: red;
+        font-size: 12px;
+        padding: 4px 12px;
+        display: none;
+      }
 
-        .warning-text {
-            color: red;
-            font-size: 12px;
-            padding: 4px 12px;
-            display: none;
-        }
+      .style-within-card {
+        padding: 8px;
+        border-radius: 4px;
+        background-color: white;
+        cursor: grab;
+        display: flex;
+        font-size: 16px;
+        justify-content: space-between;
+        width: 230px;
+      }
 
-        .style-within-card {
-            padding: 8px;
-            border-radius: 4px;
-            background-color: white;
-            cursor: grab;
-            display: flex;
-            font-size: 16px;
-            justify-content: space-between;
-            width: 230px;
-        }
+      .done-button:hover,
+      .remove-edit:hover {
+        background-color: rgba(173, 171, 171, 0.5);
+      }
 
-        .done-button:hover,
-        .remove-edit:hover {
-            background-color: rgba(173, 171, 171, 0.5);
-        }
+      .done-button,
+      .remove-edit {
+        border: 1px solid rgba(0, 0, 0, 0.3);
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background-color: white;
+      }
 
-        .done-button,
-        .remove-edit {
-            border: 1px solid rgba(0, 0, 0, 0.3);
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            background-color: white;
-        }
+      .separation-four {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
 
-        .separation-four {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+      #container {
+        display: flex;
+        justify-content: center;
+        width: 100vw;
+        height: 100vh;
+      }
 
-        #container {
-            display: flex;
-            justify-content: center;
-            width: 100vw;
-            height: 100vh;
-        }
+      #boards {
+        display: flex;
+        gap: 15px;
+        margin-top: 40px;
+      }
 
-        #boards {
-            display: flex;
-            gap: 15px;
-            margin-top: 40px;
-        }
+      #header {
+        padding: 8px;
+        font-size: 20px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 249px;
+      }
 
-        #header {
-            padding: 8px;
-            font-size: 20px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            width: 249px;
-        }
+      #counter {
+        font-size: 16px;
+        color: rgba(0, 0, 0, 0.5);
+      }
 
-        #counter {
-            font-size: 16px;
-            color: rgba(0, 0, 0, 0.5);
-        }
+      #add-card {
+        display: flex;
+        justify-content: flex-start;
+        border: none;
+        font-size: 15px;
+        padding: 8px;
+        border-radius: 4px;
+      }
 
-        #add-card {
-            display: flex;
-            justify-content: flex-start;
-            border: none;
-            font-size: 15px;
-            padding: 8px;
-            border-radius: 4px;
-        }
+      #add-card:hover {
+        background-color: rgba(173, 171, 171, 0.5);
+      }
 
-        #add-card:hover {
-            background-color: rgba(173, 171, 171, 0.5);
-        }
+      #model {
+        position: fixed;
+        top: 0;
+        left: 0;
+        background-color: rgba(0, 0, 0, 0.8);
+        width: 100vw;
+        height: 100vh;
+        display: none;
+        align-items: center;
+        justify-content: center;
+      }
 
-        #model {
-            position: fixed;
-            top: 0;
-            left: 0;
-            background-color: rgba(0, 0, 0, 0.8);
-            width: 100vw;
-            height: 100vh;
-            display: none;
-            align-items: center;
-            justify-content: center;
-        }
+      #inside-model {
+        position: absolute;
+        background-color: white;
+        border-radius: 8px;
+        padding: 16px;
+        width: 400px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
 
-        #inside-model {
-            position: absolute;
-            background-color: white;
-            border-radius: 8px;
-            padding: 16px;
-            width: 400px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
+      #add-task {
+        padding: 8px;
+        border-radius: 4px;
+        border: none;
+        background-color: black;
+        color: white;
+        margin-top: 24pxs;
+      }
 
-        #add-task {
-            padding: 8px;
-            border-radius: 4px;
-            border: none;
-            background-color: black;
-            color: white;
-            margin-top: 24pxs;
-        }
+      #within-card {
+        padding: 8px;
+        border-radius: 4px;
+        background-color: white;
+        cursor: grab;
+        display: flex;
+        gap: 12px;
+        display: flex;
+      }
 
-        #within-card {
-            padding: 8px;
-            border-radius: 4px;
-            background-color: white;
-            cursor: grab;
-            display: flex;
-            gap: 12px;
-            display: flex;
-        }
+      #card-priority {
+        width: fit-content;
+        padding: 4px 8px;
+        border-radius: 8px;
+        border: 1px solid rgba(0, 0, 0, 0.5);
+        font-size: 12px;
+      }
 
-        #card-priority {
-            width: fit-content;
-            padding: 4px 8px;
-            border-radius: 8px;
-            border: 1px solid rgba(0, 0, 0, 0.5);
-            font-size: 12px;
-        }
+      #actions {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
 
-        #actions {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        #information {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
+      #information {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
     <div id="container">
-        <div id="boards">
-            <!-- To Do Section -->
-            <div id="section-todo" class="box-board">
-                <div id="header">
-                    <div>To Do</div>
-                    <div id="todo-counter">0</div>
-                </div>
-                <div id="cardWrapper-todo" class="separation-four"></div>
-                <button class="add-card">+ Add card</button>
-            </div>
-
-            <!-- In Progress Section -->
-            <div id="section-inProgress" class="box-board">
-                <div id="header">
-                    <div>In Progress</div>
-                    <div id="inProgress-counter">0</div>
-                </div>
-                <div id="cardWrapper-inProgress" class="separation-four"></div>
-                <button class="add-card">+ Add card</button>
-            </div>
-
-            <!-- Stuck Section -->
-            <div id="section-stuck" class="box-board">
-                <div id="header">
-                    <div>Stuck</div>
-                    <div id="stuck-counter">0</div>
-                </div>
-                <div id="cardWrapper-stuck" class="separation-four"></div>
-                <button class="add-card">+ Add card</button>
-            </div>
-
-            <!-- Done Section -->
-            <div id="section-done" class="box-board">
-                <div id="header">
-                    <div>Done</div>
-                    <div id="done-counter">0</div>
-                </div>
-                <div id="cardWrapper-done" class="separation-four"></div>
-                <button class="add-card">+ Add card</button>
-            </div>
+      <div id="boards">
+        <!-- To Do Section -->
+        <div id="section-todo" class="box-board">
+          <div id="header">
+            <div>To Do</div>
+            <div id="todo-counter">0</div>
+          </div>
+          <div id="cardWrapper-todo" class="separation-four"></div>
+          <button class="add-card">+ Add card</button>
         </div>
+
+        <!-- In Progress Section -->
+        <div id="section-inProgress" class="box-board">
+          <div id="header">
+            <div>In Progress</div>
+            <div id="inProgress-counter">0</div>
+          </div>
+          <div id="cardWrapper-inProgress" class="separation-four"></div>
+          <button class="add-card">+ Add card</button>
+        </div>
+
+        <!-- Stuck Section -->
+        <div id="section-stuck" class="box-board">
+          <div id="header">
+            <div>Stuck</div>
+            <div id="stuck-counter">0</div>
+          </div>
+          <div id="cardWrapper-stuck" class="separation-four"></div>
+          <button class="add-card">+ Add card</button>
+        </div>
+
+        <!-- Done Section -->
+        <div id="section-done" class="box-board">
+          <div id="header">
+            <div>Done</div>
+            <div id="done-counter">0</div>
+          </div>
+          <div id="cardWrapper-done" class="separation-four"></div>
+          <button class="add-card">+ Add card</button>
+        </div>
+      </div>
     </div>
 
     <!-- Modal for Adding Task -->
-    <div id="modal" style="display:none;">
-        <div id="inside-modal">
-            <h1>Add Task</h1>
-            <div>
-                <div style="font-size: 14px;">Title</div>
-                <input type="text" id="task-title">
-                <p class="warning-text">Please enter a title</p>
-            </div>
-            <div>
-                <div style="font-size: 14px;">Description</div>
-                <textarea id="task-description" cols="30" rows="10"></textarea>
-                <p class="warning-text">Please enter a description</p>
-            </div>
-            <div>
-                <div style="font-size: 14px;">Status</div>
-                <select id="task-status">
-                    <option value="To do">To Do</option>
-                    <option value="In Progress">In Progress</option>
-                    <option value="Stuck">Stuck</option>
-                    <option value="Done">Done</option>
-                </select>
-            </div>
-            <div>
-                <div style="font-size: 14px;">Priority</div>
-                <select id="task-priority">
-                    <option value="Low">Low</option>
-                    <option value="Medium">Medium</option>
-                    <option value="High">High</option>
-                </select>
-            </div>
-            <button id="add-task">Add Task</button>
+    <div id="modal" style="display: none">
+      <div id="inside-modal">
+        <h1>Add Task</h1>
+        <div>
+          <div style="font-size: 14px">Title</div>
+          <input type="text" id="task-title" />
+          <p class="warning-text">Please enter a title</p>
         </div>
+        <div>
+          <div style="font-size: 14px">Description</div>
+          <textarea id="task-description" cols="30" rows="10"></textarea>
+          <p class="warning-text">Please enter a description</p>
+        </div>
+        <div>
+          <div style="font-size: 14px">Status</div>
+          <select id="task-status">
+            <option value="To do">To Do</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Stuck">Stuck</option>
+            <option value="Done">Done</option>
+          </select>
+        </div>
+        <div>
+          <div style="font-size: 14px">Priority</div>
+          <select id="task-priority">
+            <option value="Low">Low</option>
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
+          </select>
+        </div>
+        <button id="add-task">Add Task</button>
+      </div>
     </div>
 
     <script>
-        allboards.forEach(board => {
-    board.addEventListener('dragover', (event) => {
-        event.preventDefault();
-    });
+      allboards.forEach((board) => {
+        board.addEventListener("dragover", (event) => {
+          event.preventDefault();
+        });
 
-    board.addEventListener('dragenter', (event) => {
-        event.preventDefault();
-        if (draggedItem) {
+        board.addEventListener("dragenter", (event) => {
+          event.preventDefault();
+          if (draggedItem) {
             if (draggedItem !== event.currentTarget) {
-                let id = draggedItem.getAttribute('data-id');
-                let status = event.currentTarget.getAttribute('data-status');
+              let id = draggedItem.getAttribute("data-id");
+              let status = event.currentTarget.getAttribute("data-status");
 
-                // Compare the status and update accordingly
-                if (status === 'todo') {
-                    todoCard.querySelector('.all-cards').appendChild(draggedItem);
-                } else if (status === 'inProgress') {
-                    progressCard.querySelector('.all-cards').appendChild(draggedItem);
-                } else if (status === 'stuck') {
-                    stuckCard.querySelector('.all-cards').appendChild(draggedItem);
-                } else if (status === 'done') {
-                    doneCard.querySelector('.all-cards').appendChild(draggedItem);
-                }
+              // Compare the status and update accordingly
+              if (status === "todo") {
+                todoCard.querySelector(".all-cards").appendChild(draggedItem);
+              } else if (status === "inProgress") {
+                progressCard
+                  .querySelector(".all-cards")
+                  .appendChild(draggedItem);
+              } else if (status === "stuck") {
+                stuckCard.querySelector(".all-cards").appendChild(draggedItem);
+              } else if (status === "done") {
+                doneCard.querySelector(".all-cards").appendChild(draggedItem);
+              }
 
-                // Call the counter function here
-                counter();
+              // Call the counter function here
+              counter();
             }
-        }
-        // You might want to call Updatecounter() here if needed.
-    });
+          }
+          // You might want to call Updatecounter() here if needed.
+        });
 
-    board.addEventListener('dragleave', () => {
-        // Handle dragleave if needed
-    });
+        board.addEventListener("dragleave", () => {
+          // Handle dragleave if needed
+        });
 
-    board.addEventListener('drop', (event) => {
-        event.preventDefault();
-        // Handle drop if needed
-    });
-});
-
+        board.addEventListener("drop", (event) => {
+          event.preventDefault();
+          // Handle drop if needed
+        });
+      });
     </script>
-</body>
-
+  </body>
 </html>
